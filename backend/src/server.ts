@@ -4,6 +4,7 @@ import { config } from './config/index.js';
 import routes from './routes/index.js';
 
 const app = express();
+const normalizeOrigin = (value: string): string => value.trim().replace(/\/$/, '');
 
 // Middlewares
 app.use(cors({
@@ -14,19 +15,22 @@ app.use(cors({
       return;
     }
 
+    const normalizedOrigin = normalizeOrigin(origin);
     const allowedOrigins = new Set(config.frontendUrls);
     const isLocalhostDev =
       config.nodeEnv !== 'production' &&
-      /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+      /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(normalizedOrigin);
 
-    if (allowedOrigins.has(origin) || isLocalhostDev) {
+    if (allowedOrigins.has(normalizedOrigin) || isLocalhostDev) {
       callback(null, true);
       return;
     }
 
-    callback(new Error(`Origem não permitida pelo CORS: ${origin}`));
+    callback(new Error(`Origem não permitida pelo CORS: ${normalizedOrigin}`));
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(express.json());
 

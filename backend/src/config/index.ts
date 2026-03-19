@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import type { SignOptions } from 'jsonwebtoken';
 
+const normalizeOrigin = (value: string): string => value.trim().replace(/\/$/, '');
+
 // Carregar variáveis de ambiente
 dotenv.config({ path: path.resolve(import.meta.dirname, '../../.env') });
 
@@ -10,9 +12,9 @@ export const config = {
   port: parseInt(process.env.PORT || '3001', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
-  frontendUrls: (process.env.FRONTEND_URLS || process.env.FRONTEND_URL || 'http://localhost:8080')
+  frontendUrls: (process.env.FRONTEND_URLS || process.env.FRONTEND_URL || 'http://localhost:5173')
     .split(',')
-    .map((url) => url.trim())
+    .map((url) => normalizeOrigin(url))
     .filter(Boolean),
 
   // JWT
