@@ -17,7 +17,7 @@ const projects = [
   {
     image: project2,
     title: "Apartamento Vila Nova",
-    location: "São Paulo, SP",
+    location: "João Pessoa, PB",
     scope: "Climatização · Persianas · Iluminação",
     description: "Transformação de um apartamento de alto padrão com automação de climatização inteligente e controle de persianas por cenários.",
   },
