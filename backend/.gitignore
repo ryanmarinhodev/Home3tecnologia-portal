@@ -1,2 +1,4 @@
 .env
 e-credentials.json
+node_modules/
+postman-requests.txt
