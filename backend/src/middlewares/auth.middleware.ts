@@ -3,11 +3,9 @@ import { authService, TokenPayload } from '../services/auth.service.js';
 import { UserRole } from '@prisma/client';
 
 // Extender tipo Request do Express
-declare global {
-  namespace Express {
-    interface Request {
-      user?: TokenPayload;
-    }
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: TokenPayload;
   }
 }
 
