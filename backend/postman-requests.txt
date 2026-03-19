@@ -1,0 +1,167 @@
+HOME3 BACKEND - GUIA RAPIDO POSTMAN
+
+BASE URL
+http://localhost:3001/api
+
+SUGESTAO DE ENVIRONMENT NO POSTMAN
+- baseUrl = http://localhost:3001/api
+- adminToken =
+- clientToken =
+
+==================================================
+1) PING (saude da API)
+==================================================
+Metodo: GET
+URL: {{baseUrl}}/ping
+Headers: nenhum
+Body: nenhum
+
+Resposta esperada (200):
+{
+  "status": "pong",
+  "timestamp": "..."
+}
+
+==================================================
+2) LOGIN ADMIN
+==================================================
+Metodo: POST
+URL: {{baseUrl}}/auth/login
+Headers:
+- Content-Type: application/json
+Body (raw JSON):
+{
+  "email": "admin@home3.com.br",
+  "password": "admin123"
+}
+
+Resposta esperada (200):
+- message
+- user
+- token
+
+Apos responder, copie o campo token e salve em {{adminToken}}.
+
+==================================================
+3) LOGIN CLIENTE
+==================================================
+Metodo: POST
+URL: {{baseUrl}}/auth/login
+Headers:
+- Content-Type: application/json
+Body (raw JSON):
+{
+  "email": "cliente@exemplo.com",
+  "password": "cliente123"
+}
+
+Apos responder, copie o token e salve em {{clientToken}}.
+
+==================================================
+4) AUTH ME (usuario atual)
+==================================================
+Metodo: GET
+URL: {{baseUrl}}/auth/me
+Headers:
+- Authorization: Bearer {{adminToken}}
+Body: nenhum
+
+OBS: esta rota e GET (nao e POST).
+
+==================================================
+5) AUTH VERIFY (validar token)
+==================================================
+Metodo: POST
+URL: {{baseUrl}}/auth/verify
+Headers:
+- Authorization: Bearer {{adminToken}}
+Body: nenhum
+
+Resposta esperada (200):
+{
+  "valid": true,
+  "user": { ... }
+}
+
+==================================================
+6) ADMIN - LISTAR CLIENTES
+==================================================
+Metodo: GET
+URL: {{baseUrl}}/admin/clients
+Headers:
+- Authorization: Bearer {{adminToken}}
+Body: nenhum
+
+==================================================
+7) ADMIN - CRIAR CLIENTE
+==================================================
+Metodo: POST
+URL: {{baseUrl}}/admin/clients
+Headers:
+- Authorization: Bearer {{adminToken}}
+- Content-Type: application/json
+Body (raw JSON):
+{
+  "email": "novo.cliente@empresa.com",
+  "password": "12345678",
+  "name": "Novo Cliente",
+  "phone": "(11) 99999-9999",
+  "companyName": "Empresa XYZ",
+  "googleDriveFolderId": "ID_DA_PASTA_NO_DRIVE",
+  "googleDriveFolderName": "Projeto XYZ",
+  "status": "ACTIVE"
+}
+
+==================================================
+8) CLIENTE - LISTAR ARQUIVOS DA PROPRIA PASTA
+==================================================
+Metodo: GET
+URL: {{baseUrl}}/files
+Headers:
+- Authorization: Bearer {{clientToken}}
+Body: nenhum
+
+==================================================
+9) CLIENTE - INFO DE ARQUIVO
+==================================================
+Metodo: GET
+URL: {{baseUrl}}/files/:fileId/info
+Headers:
+- Authorization: Bearer {{clientToken}}
+Body: nenhum
+
+Troque :fileId por um id real retornado em /files.
+
+==================================================
+10) CLIENTE - DOWNLOAD DE ARQUIVO
+==================================================
+Metodo: GET
+URL: {{baseUrl}}/files/:fileId/download
+Headers:
+- Authorization: Bearer {{clientToken}}
+Body: nenhum
+
+==================================================
+ERROS COMUNS
+==================================================
+1. "Formato de token invalido"
+Causa: faltou "Bearer " no header Authorization.
+Correto: Authorization: Bearer {{token}}
+
+2. "Cannot POST /api/auth/me"
+Causa: metodo errado.
+Correto: /auth/me e GET.
+
+3. 401 Unauthorized
+Causa: token ausente, expirado, invalido ou com role incorreta.
+
+==================================================
+ORDEM RECOMENDADA DE TESTE
+==================================================
+1) GET /ping
+2) POST /auth/login (admin)
+3) GET /auth/me (com Bearer)
+4) POST /auth/verify (com Bearer)
+5) GET /admin/clients (com Bearer admin)
+6) POST /auth/login (cliente)
+7) GET /files (com Bearer cliente)

@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Enum para status do cliente
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+}
+
+// Enum para roles de usuário
+enum UserRole {
+  ADMIN
+  CLIENT
+}
+
+// Tabela de usuários (admins e clientes)
+model User {
+  id            String       @id @default(cuid())
+  email         String       @unique
+  passwordHash  String       @map("password_hash")
+  name          String
+  role          UserRole     @default(CLIENT)
+  status        ClientStatus @default(PENDING)
+  
+  // Relacionamento com cliente (se for um cliente)
+  client        Client?
+  
+  // Timestamps
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  lastLoginAt   DateTime?    @map("last_login_at")
+
+  @@map("users")
+}
+
+// Tabela de clientes com mapeamento para Google Drive
+model Client {
+  id                    String       @id @default(cuid())
+  
+  // Relacionamento com usuário
+  userId                String       @unique @map("user_id")
+  user                  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Dados do cliente
+  companyName           String?      @map("company_name")
+  phone                 String?
+  
+  // Google Drive
+  googleDriveFolderId   String       @map("google_drive_folder_id")
+  googleDriveFolderName String?      @map("google_drive_folder_name")
+  
+  // Timestamp
+  createdAt             DateTime     @default(now()) @map("created_at")
+  updatedAt             DateTime     @updatedAt @map("updated_at")
+  
+  // Logs de acesso
+  accessLogs            AccessLog[]
+
+  @@map("clients")
+}
+
+// Tabela de logs de acesso (para auditoria)
+model AccessLog {
+  id          String   @id @default(cuid())
+  
+  // Relacionamento com cliente
+  clientId    String   @map("client_id")
+  client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  
+  // Detalhes do acesso
+  action      String
+  details     String?
+  ipAddress   String?  @map("ip_address")
+  userAgent   String?  @map("user_agent")
+  
+  // Timestamp
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("access_logs")
+}
