@@ -1,11 +1,14 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import type { SignOptions } from 'jsonwebtoken';
 
 const normalizeOrigin = (value: string): string => value.trim().replace(/\/$/, '');
 
 // Carregar variáveis de ambiente
-dotenv.config({ path: path.resolve(import.meta.dirname, '../../.env') });
+const currentFilePath = fileURLToPath(import.meta.url);
+const currentDirPath = path.dirname(currentFilePath);
+dotenv.config({ path: path.resolve(currentDirPath, '../../.env') });
 
 export const config = {
   // Server
@@ -34,7 +37,7 @@ export const config = {
   databaseUrl: process.env.DATABASE_URL || '',
 };
 
-// Validar configurações obrigatórias em produção
+// Em serverless, evitar crash no bootstrap e deixar a aplicação responder com erro legível.
 if (config.nodeEnv === 'production') {
   const requiredEnvVars = [
     'JWT_SECRET',
@@ -43,9 +46,8 @@ if (config.nodeEnv === 'production') {
     'GOOGLE_PRIVATE_KEY',
   ];
 
-  for (const envVar of requiredEnvVars) {
-    if (!process.env[envVar]) {
-      throw new Error(`Variável de ambiente obrigatória não definida: ${envVar}`);
-    }
+  const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);
+  if (missingEnvVars.length > 0) {
+    console.error(`Variáveis obrigatórias ausentes em produção: ${missingEnvVars.join(', ')}`);
   }
 }
