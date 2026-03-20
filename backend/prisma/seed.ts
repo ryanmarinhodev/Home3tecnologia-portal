@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Iniciando seed do banco de dados...');
 
-  // Criar usuário admin
+  //  Criar usuário admin
   const adminPasswordHash = await bcrypt.hash('admin123', 10);
   
   const admin = await prisma.user.upsert({
