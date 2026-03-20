@@ -37,6 +37,11 @@ export const config = {
   databaseUrl: process.env.DATABASE_URL || '',
 };
 
+if (config.nodeEnv !== 'production') {
+  console.log('[ENV] FRONTEND_URL:', config.frontendUrl);
+  console.log('[ENV] FRONTEND_URLS:', config.frontendUrls);
+}
+
 // Em serverless, evitar crash no bootstrap e deixar a aplicação responder com erro legível.
 if (config.nodeEnv === 'production') {
   const requiredEnvVars = [
