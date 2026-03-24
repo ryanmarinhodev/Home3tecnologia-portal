@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { User, Mail, Lock, Eye, EyeOff, Phone, Building, RefreshCw, CheckCircle } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, Phone, Building, RefreshCw, CheckCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
+import { authApi } from "@/lib/api";
 
 const Login = () => {
   const { login, register, isAuthenticated, user, isLoading: authLoading } = useAuth();
@@ -18,6 +19,11 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+
+  // Recuperação de senha
+  const [forgotStep, setForgotStep] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSent, setForgotSent] = useState(false);
   
   // Login form state
   const [loginForm, setLoginForm] = useState({
@@ -56,6 +62,21 @@ const Login = () => {
       // Redirecionamento é feito pelo useEffect
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erro ao fazer login";
+      setError(message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+    try {
+      await authApi.forgotPassword(forgotEmail);
+      setForgotSent(true);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Erro ao enviar e-mail";
       setError(message);
     } finally {
       setIsLoading(false);
@@ -140,7 +161,60 @@ const Login = () => {
                 </div>
               )}
 
-              <Tabs defaultValue="login" className="w-full" onValueChange={() => { setError(null); setSuccess(null); }}>
+              {/* Painel de recuperação de senha */}
+              {forgotStep ? (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+                  {forgotSent ? (
+                    <div className="space-y-4 text-center">
+                      <CheckCircle className="h-12 w-12 text-green-500 mx-auto" />
+                      <p className="text-sm text-muted-foreground">
+                        Se este e-mail estiver cadastrado, você receberá as instruções em breve. Verifique sua caixa de entrada.
+                      </p>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full"
+                        onClick={() => { setForgotStep(false); setForgotSent(false); setForgotEmail(""); setError(null); }}
+                      >
+                        <ArrowLeft className="h-4 w-4 mr-2" /> Voltar ao login
+                      </Button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleForgotPassword} className="space-y-5">
+                      <p className="text-sm text-muted-foreground">
+                        Informe seu e-mail e enviaremos um link para redefinir sua senha.
+                      </p>
+                      <div className="space-y-2">
+                        <Label htmlFor="forgot-email" className="text-sm font-medium">E-mail</Label>
+                        <div className="relative">
+                          <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            id="forgot-email"
+                            type="email"
+                            placeholder="seu@email.com"
+                            className="pl-10 h-11 bg-background/50 border-border/50 focus:border-primary transition-colors"
+                            value={forgotEmail}
+                            onChange={(e) => setForgotEmail(e.target.value)}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <Button type="submit" variant="brass" className="w-full h-11 font-medium" disabled={isLoading}>
+                        {isLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : "Enviar link de recuperação"}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        className="w-full"
+                        onClick={() => { setForgotStep(false); setError(null); }}
+                      >
+                        <ArrowLeft className="h-4 w-4 mr-2" /> Voltar ao login
+                      </Button>
+                    </form>
+                  )}
+                </motion.div>
+              ) : (
+                <Tabs defaultValue="login" className="w-full" onValueChange={() => { setError(null); setSuccess(null); }}>
                 <TabsList className="grid w-full grid-cols-2 mb-6">
                   <TabsTrigger value="login" className="font-medium">
                     Entrar
@@ -205,6 +279,7 @@ const Login = () => {
                     <div className="flex items-center justify-end">
                       <button
                         type="button"
+                        onClick={() => { setForgotStep(true); setError(null); setForgotEmail(loginForm.email); }}
                         className="text-sm text-primary hover:text-primary/80 hover:underline transition-colors"
                       >
                         Esqueceu a senha?
@@ -362,6 +437,7 @@ const Login = () => {
                   </motion.form>
                 </TabsContent>
               </Tabs>
+              )}
             </CardContent>
           </Card>
 

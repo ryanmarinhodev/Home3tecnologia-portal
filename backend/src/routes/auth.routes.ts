@@ -102,4 +102,58 @@ router.post('/verify', authenticate, (req: Request, res: Response) => {
   });
 });
 
+// Schema de validação para recuperação de senha
+const forgotPasswordSchema = z.object({
+  email: z.string().email('E-mail inválido'),
+});
+
+const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Token é obrigatório'),
+  password: z.string().min(8, 'Senha deve ter no mínimo 8 caracteres'),
+});
+
+/**
+ * POST /api/auth/forgot-password
+ * Solicita recuperação de senha (envia email com token)
+ */
+router.post('/forgot-password', async (req: Request, res: Response) => {
+  try {
+    const validationResult = forgotPasswordSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      res.status(400).json({ error: 'Dados inválidos', details: validationResult.error.errors });
+      return;
+    }
+
+    await authService.requestPasswordReset(validationResult.data.email);
+
+    // Sempre retorna 200 para não revelar se o email existe
+    res.json({ message: 'Se este e-mail estiver cadastrado, você receberá as instruções em breve.' });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Erro ao processar solicitação';
+    res.status(500).json({ error: message });
+  }
+});
+
+/**
+ * POST /api/auth/reset-password
+ * Redefine a senha usando o token recebido por email
+ */
+router.post('/reset-password', async (req: Request, res: Response) => {
+  try {
+    const validationResult = resetPasswordSchema.safeParse(req.body);
+    if (!validationResult.success) {
+      res.status(400).json({ error: 'Dados inválidos', details: validationResult.error.errors });
+      return;
+    }
+
+    const { token, password } = validationResult.data;
+    await authService.resetPassword(token, password);
+
+    res.json({ message: 'Senha redefinida com sucesso.' });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Erro ao redefinir senha';
+    res.status(400).json({ error: message });
+  }
+});
+
 export default router;

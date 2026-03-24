@@ -2,3 +2,4 @@
 e-credentials.json
 node_modules/
 postman-requests.txt
+test/routes/auth-password-recovery.test.ts

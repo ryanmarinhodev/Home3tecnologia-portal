@@ -14,6 +14,7 @@ const normalizeApiBaseUrl = (value?: string): string => {
 };
 
 const API_BASE_URL = normalizeApiBaseUrl(import.meta.env.VITE_API_URL);
+console.log('API Base URL:', API_BASE_URL);
 
 // Tipos
 export interface User {
@@ -130,6 +131,18 @@ export const authApi = {
   verify: () => apiRequest<{ valid: boolean; user: User }>('/auth/verify', {
     method: 'POST',
   }),
+
+  forgotPassword: (email: string) =>
+    apiRequest<{ message: string }>('/auth/forgot-password', {
+      method: 'POST',
+      body: JSON.stringify({ email }),
+    }),
+
+  resetPassword: (token: string, password: string) =>
+    apiRequest<{ message: string }>('/auth/reset-password', {
+      method: 'POST',
+      body: JSON.stringify({ token, password }),
+    }),
 };
 
 // API de Arquivos

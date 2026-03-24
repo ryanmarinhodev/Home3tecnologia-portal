@@ -35,6 +35,11 @@ export const config = {
 
   // Database
   databaseUrl: process.env.DATABASE_URL || '',
+
+  // Resend (email)
+  resend: {
+    apiKey: process.env.RESEND_API_KEY || '',
+  },
 };
 
 if (config.nodeEnv !== 'production') {
@@ -49,6 +54,8 @@ if (config.nodeEnv === 'production') {
     'DATABASE_URL',
     'GOOGLE_SERVICE_ACCOUNT_EMAIL',
     'GOOGLE_PRIVATE_KEY',
+    'RESEND_API_KEY',
+    'FRONTEND_URL',
   ];
 
   const missingEnvVars = requiredEnvVars.filter((envVar) => !process.env[envVar]);

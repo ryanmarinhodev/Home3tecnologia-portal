@@ -1,9 +1,11 @@
 import jwt from 'jsonwebtoken';
 import type { Secret } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import { randomBytes } from 'crypto';
 import { config } from '../config/index.js';
 import { prisma } from '../lib/prisma.js';
 import { UserRole, ClientStatus } from '@prisma/client';
+import { emailService } from './email.service.js';
 
 export interface TokenPayload {
   userId: string;
@@ -161,6 +163,58 @@ class AuthService {
       status: user.status,
       message: 'Cadastro realizado! Aguarde a aprovação do administrador.',
     };
+  }
+
+  /**
+   * Solicita recuperação de senha — gera token, salva no banco e envia email
+   */
+  async requestPasswordReset(email: string): Promise<void> {
+    const user = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+    });
+
+    // Resposta genérica para não revelar se o email existe
+    if (!user) return;
+
+    const token = randomBytes(32).toString('hex');
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordResetToken: token,
+        resetTokenExpiresAt: expiresAt,
+      },
+    });
+
+    await emailService.sendPasswordResetEmail(user.email, user.name, token);
+  }
+
+  /**
+   * Redefine a senha usando o token recebido por email
+   */
+  async resetPassword(token: string, newPassword: string): Promise<void> {
+    const user = await prisma.user.findFirst({
+      where: {
+        passwordResetToken: token,
+        resetTokenExpiresAt: { gt: new Date() },
+      },
+    });
+
+    if (!user) {
+      throw new Error('Token inválido ou expirado.');
+    }
+
+    const passwordHash = await this.hashPassword(newPassword);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordHash,
+        passwordResetToken: null,
+        resetTokenExpiresAt: null,
+      },
+    });
   }
 
   /**

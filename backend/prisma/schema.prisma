@@ -36,6 +36,10 @@ model User {
   // Relacionamento com cliente (se for um cliente)
   client        Client?
   
+  // Reset de senha
+  passwordResetToken   String?   @map("password_reset_token")
+  resetTokenExpiresAt  DateTime? @map("reset_token_expires_at")
+
   // Timestamps
   createdAt     DateTime     @default(now()) @map("created_at")
   updatedAt     DateTime     @updatedAt @map("updated_at")
