@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import AnimatedSection from "@/components/AnimatedSection";
+import Seo from "@/components/Seo";
 import { toast } from "sonner";
 
 const Contato = () => {
@@ -21,6 +22,12 @@ const Contato = () => {
 
   return (
     <main className="pt-20">
+      <Seo
+        title="Contato Home3 | Automação Residencial em João Pessoa"
+        description="Solicite um orçamento de automação residencial em João Pessoa. Fale com a Home3 sobre iluminação, segurança, climatização e integração completa da sua casa."
+        path="/contato"
+      />
+
       <AnimatedSection className="py-20 md:py-28">
         <div className="container">
           <p className="font-display text-2xl uppercase tracking-[0.3em] text-primary mb-8">Contato</p>

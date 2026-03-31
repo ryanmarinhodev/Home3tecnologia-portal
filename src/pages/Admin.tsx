@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
 import { adminApi, ClientWithDetails, AdminStats } from "@/lib/api";
+import Seo from "@/components/Seo";
 
 const Admin = () => {
   const { user, logout, isLoading: authLoading, isAdmin } = useAuth();
@@ -234,6 +235,12 @@ const Admin = () => {
 
   return (
     <main className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-background via-background to-muted/30">
+      <Seo
+        title="Painel Administrativo | Home3 Tecnologia"
+        description="Painel administrativo interno da Home3 Tecnologia."
+        path="/admin"
+        noindex
+      />
       <div className="container max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

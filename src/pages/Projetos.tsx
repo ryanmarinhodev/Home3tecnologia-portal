@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/AnimatedSection";
+import Seo from "@/components/Seo";
 import project1 from "@/assets/project-1.jpg";
 import project2 from "@/assets/project-2.jpg";
 import project3 from "@/assets/project-3.jpg";
@@ -33,6 +34,12 @@ const projects = [
 const Projetos = () => {
   return (
     <main className="pt-20">
+      <Seo
+        title="Projetos de Casa Inteligente em João Pessoa | Home3"
+        description="Veja projetos de automação residencial da Home3: integração de iluminação, climatização, segurança e entretenimento em residências de alto padrão."
+        path="/projetos"
+      />
+
       <AnimatedSection className="py-20 md:py-28">
         <div className="container">
           <p className="font-display text-xs uppercase tracking-[0.3em] text-primary mb-4">Portfólio</p>

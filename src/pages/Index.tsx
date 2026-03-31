@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Sun, Moon, Lightbulb, Thermometer, Shield, Music, Wifi, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/AnimatedSection";
+import Seo from "@/components/Seo";
 import heroDay from "@/assets/hero-day.jpg";
 import heroNight from "@/assets/hero-night.jpg";
 
@@ -29,6 +30,12 @@ const Index = () => {
 
   return (
     <main>
+      <Seo
+        title="Automação Residencial em João Pessoa | Home3 Tecnologia"
+        description="Projetos de automação residencial premium em João Pessoa: iluminação, climatização, segurança, áudio e vídeo com integração total para sua casa inteligente."
+        path="/"
+      />
+
       {/* Hero Section */}
       <section className="relative h-screen w-full overflow-hidden">
         {/* Day Image */}
@@ -66,7 +73,7 @@ const Index = () => {
               transition={{ duration: 1, delay: 0.6 }}
               className="font-body text-card/70 mt-6 max-w-lg text-base md:text-lg"
             >
-              Automação residencial premium que se integra perfeitamente ao seu estilo de vida.
+              Automação residencial em João Pessoa com integração premium ao seu estilo de vida.
             </motion.p>
 
             {/* Slider */}

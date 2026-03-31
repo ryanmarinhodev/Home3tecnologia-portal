@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { authApi } from "@/lib/api";
+import Seo from "@/components/Seo";
 
 const Login = () => {
   const { login, register, isAuthenticated, user, isLoading: authLoading } = useAuth();
@@ -132,6 +133,12 @@ const Login = () => {
 
   return (
     <main className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-background via-background to-muted/30">
+      <Seo
+        title="Area do Cliente | Home3 Tecnologia"
+        description="Acesse a area do cliente da Home3 Tecnologia para acompanhar seus projetos e arquivos."
+        path="/login"
+        noindex
+      />
       <div className="container max-w-lg mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

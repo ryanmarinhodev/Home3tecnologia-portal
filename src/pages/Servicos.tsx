@@ -2,6 +2,7 @@ import { Lightbulb, Thermometer, Shield, Music, Wifi, Zap, ArrowRight } from "lu
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/AnimatedSection";
+import Seo from "@/components/Seo";
 import { motion } from "framer-motion";
 
 const timelineServices = [
@@ -64,6 +65,12 @@ const timelineServices = [
 const Servicos = () => {
   return (
     <main className="pt-20">
+      <Seo
+        title="Serviços de Automação Residencial em João Pessoa | Home3"
+        description="Conheça nossos serviços de automação residencial em João Pessoa: iluminação cênica, climatização inteligente, segurança 24h, áudio e vídeo e infraestrutura de rede."
+        path="/servicos"
+      />
+
       {/* Header */}
       <AnimatedSection className="py-20 md:py-28">
         <div className="container">

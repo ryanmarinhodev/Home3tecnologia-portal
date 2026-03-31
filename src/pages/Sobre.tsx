@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import AnimatedSection from "@/components/AnimatedSection";
+import Seo from "@/components/Seo";
 import { motion } from "framer-motion";
 import { Eye, Target, Heart } from "lucide-react";
 
@@ -8,7 +9,7 @@ const values = [
   {
     icon: Eye,
     title: "Visão",
-    desc: "Ser referência no mercado residencial e corporativo, sendo reconhecida com uma empresa de inovação e eficiência tecnológica.",
+    desc: "Ser referência no mercado residencial e corporativo, sendo reconhecida como uma empresa de inovação e eficiência tecnológica.",
   },
   {
     icon: Target,
@@ -18,13 +19,19 @@ const values = [
   {
     icon: Heart,
     title: "Valores",
-    desc: "Paixão pelo trabalho, respeito total as pessoas e excelência em tudo que fazemos e espírito inovador.",
+    desc: "Paixão pelo trabalho, respeito total às pessoas, excelência em tudo o que fazemos e espírito inovador.",
   },
 ];
 
 const Sobre = () => {
   return (
     <main className="pt-20">
+      <Seo
+        title="Sobre a Home3 Tecnologia | Automação Residencial em João Pessoa"
+        description="Conheça a Home3 Tecnologia, especialista em automação residencial em João Pessoa, com foco em conforto, segurança, eficiência e integração tecnológica."
+        path="/sobre"
+      />
+
       <AnimatedSection className="py-20 md:py-28">
         <div className="container">
           <p className="font-display text-xs uppercase tracking-[0.3em] text-primary mb-4">Sobre Nós</p>
@@ -110,9 +117,9 @@ const Sobre = () => {
       {/* CTA */}
       <AnimatedSection className="py-24 md:py-32">
         <div className="container text-center">
-          <h2 className="font-display text-60xl md:text-6xl font-light text-foreground mb-6">
-            <p className="text-primary"> Nossa Prioridade é realizar seu sonho.</p>
-            <p> </p>
+          <h2 className="font-display text-4xl md:text-6xl font-light text-foreground mb-6">
+            <span className="text-primary">Nossa prioridade é realizar seu sonho.</span>
+            <br />
             Vamos construir algo <span className="font-semibold">extraordinário</span>
           </h2>
           <Link to="/contato">

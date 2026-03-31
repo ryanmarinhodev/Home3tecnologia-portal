@@ -23,6 +23,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useAuth } from "@/contexts/AuthContext";
 import { filesApi, DriveFile, DriveFolder } from "@/lib/api";
+import Seo from "@/components/Seo";
 
 // Helper para formatar tamanho de arquivo
 function formatFileSize(bytes?: string): string {
@@ -214,6 +215,12 @@ const ClientePage = () => {
 
   return (
     <main className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-background via-background to-muted/30">
+      <Seo
+        title="Portal do Cliente | Home3 Tecnologia"
+        description="Portal interno para clientes Home3 acompanharem arquivos e documentos de projeto."
+        path="/clientePage"
+        noindex
+      />
       <div className="container max-w-6xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

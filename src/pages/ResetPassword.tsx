@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { authApi } from "@/lib/api";
+import Seo from "@/components/Seo";
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
@@ -53,6 +54,12 @@ const ResetPassword = () => {
 
   return (
     <main className="min-h-screen pt-24 pb-16 bg-gradient-to-br from-background via-background to-muted/30">
+      <Seo
+        title="Redefinir Senha | Home3 Tecnologia"
+        description="Pagina de redefinicao de senha da Home3 Tecnologia."
+        path="/reset-password"
+        noindex
+      />
       <div className="container max-w-lg mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
