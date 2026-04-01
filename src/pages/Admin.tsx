@@ -258,6 +258,10 @@ const Admin = () => {
               </p>
             </div>
             <div className="flex gap-2">
+              <Button variant="outline" onClick={() => navigate("/admin/projetos")} className="gap-2">
+                <FolderOpen size={16} />
+                Ver Projetos
+              </Button>
               <Button variant="brass" onClick={openCreateModal} className="gap-2">
                 <Plus size={16} />
                 Novo Cliente

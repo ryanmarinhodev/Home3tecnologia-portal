@@ -66,6 +66,16 @@ export interface FolderContents {
   thumbnailLink?: string;
 }
 
+export interface AdminClientSummary {
+  id: string;
+  name: string;
+  email: string;
+}
+
+export interface AdminClientFolderContents extends FolderContents {
+  client: AdminClientSummary;
+}
+
 export interface ClientWithDetails extends User {
   client: Client | null;
   lastLoginAt?: string;
@@ -208,9 +218,10 @@ export const adminApi = {
     }),
 
   getClientFiles: (id: string) =>
-    apiRequest<FolderContents & { client: { id: string; name: string; email: string } }>(
-      `/admin/clients/${id}/files`
-    ),
+    apiRequest<AdminClientFolderContents>(`/admin/clients/${id}/files`),
+
+  getClientFolder: (id: string, folderId: string) =>
+    apiRequest<AdminClientFolderContents>(`/admin/clients/${id}/folder/${folderId}`),
 
   getStats: () => apiRequest<AdminStats>('/admin/stats'),
 };

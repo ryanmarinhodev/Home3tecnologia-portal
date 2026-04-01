@@ -390,6 +390,64 @@ router.get('/clients/:id/files', async (req: Request, res: Response) => {
 });
 
 /**
+ * GET /api/admin/clients/:id/folder/:folderId
+ * Lista arquivos de uma subpasta de cliente (para visualização admin)
+ */
+router.get('/clients/:id/folder/:folderId', async (req: Request, res: Response) => {
+  try {
+    const { id, folderId } = req.params;
+
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: { client: true },
+    });
+
+    if (!user || !user.client) {
+      res.status(404).json({ error: 'Cliente não encontrado' });
+      return;
+    }
+
+    const rootFolderId = user.client.googleDriveFolderId;
+
+    const isAllowed = await googleDriveService.verifyFileInFolder(folderId, rootFolderId);
+    if (!isAllowed && folderId !== rootFolderId) {
+      res.status(403).json({ error: 'Acesso negado a esta pasta' });
+      return;
+    }
+
+    const folderContents = await googleDriveService.listFolderContents(folderId, false);
+
+    await prisma.accessLog.create({
+      data: {
+        clientId: user.client.id,
+        action: 'VIEW_SUBFOLDER',
+        details: JSON.stringify({ by: 'admin', folderId }),
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+      },
+    });
+
+    res.json({
+      client: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
+      folder: {
+        id: folderContents.id,
+        name: folderContents.name,
+      },
+      files: folderContents.files,
+      subfolders: folderContents.subfolders,
+    });
+  } catch (error) {
+    console.error('Erro ao listar subpasta do cliente:', error);
+    const message = error instanceof Error ? error.message : 'Erro ao listar subpasta';
+    res.status(500).json({ error: message });
+  }
+});
+
+/**
  * GET /api/admin/stats
  * Estatísticas gerais
  */

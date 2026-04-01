@@ -14,6 +14,7 @@ import Contato from "./pages/Contato";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
+import AdminProjects from "./pages/AdminProjects";
 import ClientePage from "./pages/ClientePage";
 import ResetPassword from "./pages/ResetPassword";
 
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/clientePage" element={<ClientePage />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/projetos" element={<AdminProjects />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
