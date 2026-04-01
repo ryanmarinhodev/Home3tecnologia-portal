@@ -3,17 +3,38 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+const getRequiredSeedAdminPassword = (): string => {
+  const password = process.env.SEED_ADMIN_PASSWORD;
+
+  if (!password) {
+    throw new Error('Defina SEED_ADMIN_PASSWORD para executar o seed com segurança.');
+  }
+
+  if (password.length < 12) {
+    throw new Error('SEED_ADMIN_PASSWORD deve ter no minimo 12 caracteres.');
+  }
+
+  return password;
+};
+
 async function main() {
   console.log('🌱 Iniciando seed do banco de dados...');
 
+  if (isProduction) {
+    throw new Error('Seed bloqueado em producao por seguranca.');
+  }
+
   //  Criar usuário admin
-  const adminPasswordHash = await bcrypt.hash('admin123', 10);
+  const adminEmail = process.env.SEED_ADMIN_EMAIL || 'admin@home3.com.br';
+  const adminPasswordHash = await bcrypt.hash(getRequiredSeedAdminPassword(), 10);
   
   const admin = await prisma.user.upsert({
-    where: { email: 'admin@home3.com.br' },
+    where: { email: adminEmail },
     update: {},
     create: {
-      email: 'admin@home3.com.br',
+      email: adminEmail,
       passwordHash: adminPasswordHash,
       name: 'Administrador',
       role: UserRole.ADMIN,
