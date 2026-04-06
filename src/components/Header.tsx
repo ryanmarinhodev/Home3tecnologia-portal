@@ -18,6 +18,7 @@ const Header = () => {
   const [scrolledPastHero, setScrolledPastHero] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
+  const isContatoPage = location.pathname === "/contato";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,7 +30,7 @@ const Header = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const shouldHaveBg = !isHomePage || (isHomePage && scrolledPastHero);
+  const shouldHaveBg = (!isHomePage && !isContatoPage) || ((isHomePage || isContatoPage) && scrolledPastHero);
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
@@ -39,9 +40,11 @@ const Header = () => {
     }`}>
       <div className="container flex items-center justify-between h-16 md:h-20">
         <Link to="/" className="font-display text-xl md:text-2xl font-semibold tracking-tight text-foreground transition-all duration-300">
-          
-<img src={logo} alt="Home3 Logo" className={`h-8 md:h-10 transition-all duration-300 ${shouldHaveBg ? "drop-shadow-none" : "drop-shadow-lg"}`} />
-
+          <img
+            src={logo}
+            alt="Home3 Logo"
+            className={`block h-8 md:h-10 w-auto max-w-[165px] md:max-w-[220px] object-contain transition-all duration-300 ${shouldHaveBg ? "drop-shadow-none" : "drop-shadow-lg"}`}
+          />
         </Link>
 
         {/* Desktop Nav */}
