@@ -1,0 +1,11 @@
+node_modules
+dist
+dist-ssr
+.git
+.github
+.vscode
+.DS_Store
+.env
+backend/node_modules
+backend/dist
+backend/.env

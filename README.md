@@ -102,6 +102,41 @@ npm run dev
 Frontend: `http://localhost:5173`
 API: `http://localhost:3001/api`
 
+## Docker Compose
+
+Este repositorio agora tem uma configuracao de Docker voltada para estudo e desenvolvimento local:
+
+- [Dockerfile](/Users/ryanz/Desktop/home3-site-2026/Dockerfile): frontend Vite
+- [backend/Dockerfile](/Users/ryanz/Desktop/home3-site-2026/backend/Dockerfile): backend Express + Prisma
+- [docker-compose.yml](/Users/ryanz/Desktop/home3-site-2026/docker-compose.yml): frontend + backend + PostgreSQL
+
+### Subir tudo
+
+```bash
+docker compose up --build
+```
+
+Servicos:
+
+- Frontend: `http://localhost:8080`
+- Backend: `http://localhost:3001`
+- API ping: `http://localhost:3001/api/ping`
+- PostgreSQL: `localhost:5432`
+
+### O que este compose ensina
+
+- `build`: como transformar um diretorio em imagem
+- `ports`: como expor container para sua maquina
+- `volumes`: como montar o codigo local dentro do container
+- `environment`: como passar variaveis de ambiente
+- `depends_on`: como orquestrar subida entre servicos
+
+### Observacoes
+
+- Esta configuracao e para desenvolvimento, nao para producao.
+- O backend usa credenciais de exemplo no Compose apenas para o ambiente local de estudo.
+- O comando do backend roda `prisma db push` na inicializacao para facilitar o bootstrap do banco local.
+
 ## Comandos principais
 
 ### Frontend (raiz)

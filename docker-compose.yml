@@ -1,0 +1,65 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: home3-frontend
+    ports:
+      - "8080:8080"
+    environment:
+      VITE_API_URL: http://localhost:3001/api
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      backend:
+        condition: service_started
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: home3-backend
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/home3_portal?schema=public
+      DIRECT_URL: postgresql://postgres:postgres@db:5432/home3_portal?schema=public
+      JWT_SECRET: docker-dev-secret
+      JWT_EXPIRES_IN: 7d
+      FRONTEND_URL: http://localhost:8080
+      FRONTEND_URLS: http://localhost:8080
+      GOOGLE_SERVICE_ACCOUNT_EMAIL: docker-dev@example.com
+      GOOGLE_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----\\nDEV_ONLY\\n-----END PRIVATE KEY-----"
+      GOOGLE_DRIVE_ROOT_FOLDER_ID: docker-dev-root
+      RESEND_API_KEY: re_dev_placeholder
+      SEED_ADMIN_PASSWORD: admin123
+      SEED_ADMIN_EMAIL: admin@home3.local
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: home3-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: home3_portal
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d home3_portal"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
