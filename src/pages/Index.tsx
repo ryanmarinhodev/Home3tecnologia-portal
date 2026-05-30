@@ -99,13 +99,13 @@ const Index = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.9 }}
-              className="mt-10 flex gap-4"
+              className="mt-10 flex flex-col sm:flex-row gap-4"
             >
               <Link to="/contato">
-                <Button variant="hero" size="xl">Solicitar Orçamento</Button>
+                <Button variant="hero" size="xl" className="w-full sm:w-auto">Solicitar Orçamento</Button>
               </Link>
               <Link to="/projetos">
-                <Button variant="outlineBrass" size="xl" className="border-card/30 text-card hover:bg-card/10 hover:text-card">
+                <Button variant="outlineBrass" size="xl" className="w-full sm:w-auto border-card/30 text-card hover:bg-card/10 hover:text-card">
                   Ver Projetos
                 </Button>
               </Link>
