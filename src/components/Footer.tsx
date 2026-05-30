@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "./LogoHOME3.png"; // Substitua pelo caminho do seu logo
+import logo from "./LOGOHOME3TECNOLOGIA.png";
 
 
 const Footer = () => {
@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="md:col-span-2">
             <h3 className="font-display text-2xl font-semibold mb-4">
-              <img src={logo} alt="Home3 Logo" className="h-8 md:h-10" />
+              <img src={logo} alt="Home3 Logo" className="h-8 md:h-8" />
             </h3>
             <p className="font-body text-background/60 max-w-md text-sm leading-relaxed">
               Nossa Prioridade é realizar seu sonho!</p>

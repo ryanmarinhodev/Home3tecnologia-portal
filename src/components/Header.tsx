@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import logo from "./LogoHOME301.png"; // Substitua pelo caminho do seu logo
+import logo from "./LOGOHOME3TECNOLOGIA.png";
 
 const navItems = [
   { label: "Início", path: "/" },
@@ -31,10 +31,11 @@ const Header = () => {
   }, []);
 
   const shouldHaveBg = (!isHomePage && !isContatoPage) || ((isHomePage || isContatoPage) && scrolledPastHero);
+  const hasHeaderBg = shouldHaveBg || mobileOpen;
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      shouldHaveBg 
+      hasHeaderBg 
         ? "bg-background/95 backdrop-blur-xl border-b border-primary/10 shadow-lg" 
         : "bg-transparent backdrop-blur-sm border-b border-transparent"
     }`}>
@@ -43,12 +44,12 @@ const Header = () => {
           <img
             src={logo}
             alt="Home3 Logo"
-            className={`block h-8 md:h-10 w-auto max-w-[165px] md:max-w-[220px] object-contain transition-all duration-300 ${shouldHaveBg ? "drop-shadow-none" : "drop-shadow-lg"}`}
+            className={`block h-8 md:h-8 w-auto max-w-[165px] md:max-w-[220px] object-contain transition-all duration-300 ${hasHeaderBg ? "drop-shadow-none" : "drop-shadow-lg"}`}
           />
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
           {navItems.map((item) => (
             <Link
               key={item.path}
@@ -56,7 +57,7 @@ const Header = () => {
               className={`font-body text-sm tracking-wide transition-all duration-300 ${
                 location.pathname === item.path
                   ? "text-primary font-medium"
-                  : shouldHaveBg 
+                  : hasHeaderBg 
                     ? "text-foreground/70 hover:text-foreground" 
                     : "text-card/70 hover:text-card"
               }`}
@@ -68,7 +69,7 @@ const Header = () => {
             <Button variant="brass" size="sm">Solicitar Orçamento</Button>
           </Link>
           <Link to="/login">
-            <Button variant={shouldHaveBg ? "outline" : "outlineBrass"} size="sm" className={`ml-2 gap-2 ${!shouldHaveBg ? "border-card/30 text-card hover:bg-card/10" : ""}`}>
+            <Button variant={hasHeaderBg ? "outline" : "outlineBrass"} size="sm" className={`ml-2 gap-2 ${!hasHeaderBg ? "border-card/30 text-card hover:bg-card/10" : ""}`}>
               <User size={16} />
               Área do Cliente
             </Button>
@@ -77,8 +78,12 @@ const Header = () => {
 
         {/* Mobile Toggle */}
         <button
-          className={`md:hidden transition-colors duration-300 ${
-            shouldHaveBg ? "text-foreground hover:text-primary" : "text-card hover:text-primary"
+          type="button"
+          aria-label={mobileOpen ? "Fechar menu" : "Abrir menu"}
+          aria-controls="mobile-navigation"
+          aria-expanded={mobileOpen}
+          className={`lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-md transition-colors duration-300 ${
+            hasHeaderBg ? "text-foreground hover:text-primary" : "text-card hover:text-primary"
           }`}
           onClick={() => setMobileOpen(!mobileOpen)}
         >
@@ -90,15 +95,12 @@ const Header = () => {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            id="mobile-navigation"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className={`md:hidden border-b transition-colors duration-300 ${
-              shouldHaveBg 
-                ? "bg-background/98 backdrop-blur-xl border-primary/10" 
-                : "bg-background/50 backdrop-blur-lg border-card/10"
-            }`}
+            className="lg:hidden overflow-hidden border-b border-primary/10 bg-background/95 backdrop-blur-xl shadow-lg transition-colors duration-300"
           >
             <nav className="container flex flex-col gap-4 py-6">
               {navItems.map((item) => (
@@ -109,9 +111,7 @@ const Header = () => {
                   className={`font-body text-base transition-colors duration-300 ${
                     location.pathname === item.path
                       ? "text-primary font-medium"
-                      : shouldHaveBg
-                        ? "text-foreground/70 hover:text-foreground"
-                        : "text-card/70 hover:text-card"
+                      : "text-foreground/70 hover:text-foreground"
                   }`}
                 >
                   {item.label}
@@ -123,7 +123,7 @@ const Header = () => {
                 </Button>
               </Link>
               <Link to="/login" onClick={() => setMobileOpen(false)}>
-                <Button variant={shouldHaveBg ? "outline" : "outlineBrass"} size="default" className={`w-full mt-2 gap-2 ${!shouldHaveBg ? "border-card/30 text-card hover:bg-card/10" : ""}`}>
+                <Button variant="outline" size="default" className="w-full mt-2 gap-2">
                   <User size={16} />
                   Área do Cliente
                 </Button>
