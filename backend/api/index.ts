@@ -1,4 +1,6 @@
-export default async function handler(req: any, res: any) {
+import type { Request, Response } from "express";
+
+export default async function handler(req: Request, res: Response) {
 	try {
 		if (!res || typeof res.status !== 'function' || typeof res.json !== 'function') {
 			return new Response(
