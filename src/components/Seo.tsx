@@ -11,7 +11,7 @@ type SeoProps = {
 const DEFAULT_IMAGE = "/imagem.png";
 
 const setMetaByName = (name: string, content: string) => {
-  let element = document.head.querySelector(`meta[name=\"${name}\"]`);
+  let element = document.head.querySelector(`meta[name="${name}"]`);
 
   if (!element) {
     element = document.createElement("meta");
@@ -23,7 +23,7 @@ const setMetaByName = (name: string, content: string) => {
 };
 
 const setMetaByProperty = (property: string, content: string) => {
-  let element = document.head.querySelector(`meta[property=\"${property}\"]`);
+  let element = document.head.querySelector(`meta[property="${property}"]`);
 
   if (!element) {
     element = document.createElement("meta");
@@ -35,7 +35,7 @@ const setMetaByProperty = (property: string, content: string) => {
 };
 
 const setCanonical = (href: string) => {
-  let element = document.head.querySelector("link[rel=\"canonical\"]");
+  let element = document.head.querySelector('link[rel="canonical"]');
 
   if (!element) {
     element = document.createElement("link");
