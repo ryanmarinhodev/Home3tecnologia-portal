@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import WhatsAppButton from "@/components/WhatsAppButton";
 import Index from "./pages/Index";
 import Servicos from "./pages/Servicos";
 import Projetos from "./pages/Projetos";
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
+          <WhatsAppButton />
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
